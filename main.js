@@ -135,7 +135,15 @@ function draw(){
         friction.normalize();
         friction.multiply(mu);
 
-        ballArr[i].applyForce(friction);
+        var speed = ballArr[i].velocity.magnitude();
+        var dragMagnitude = mu * speed * speed;
+        drag = ballArr[i].velocity.get();
+        drag.multiply(-1);
+        drag.normalize();
+        drag.multiply(dragMagnitude);
+
+        //ballArr[i].applyForce(friction);
+        ballArr[i].applyForce(drag);
         ballArr[i].applyForce(wind);
         ballArr[i].applyForce(gravity);
 
