@@ -1,44 +1,19 @@
 console.log("main.js loaded");
 
-class Pvector{
-    constructor(x_, y_){
+class Liquid{
+    constructor({x_, y_, w_, h_, c_}){
         this.x = x_;
         this.y = y_;
+        this.w = w_;
+        this.h = h_;
+        this.c = c_;
     }
-    add(pToAdd){
-        this.x += pToAdd.x;
-        this.y += pToAdd.y
+    display(){
+        noStroke();
+        fill(175);
+        rect(this.x, this.y, this.w, this.h);
     }
-    sub(pToSub){
-        this.x -= pToSub.x;
-        this.y -= pToSub.y;
-    }
-    multiply(numToMult){
-        this.x *= numToMult;
-        this.y *= numToMult; 
-    }
-    divide(numToDiv){
-        this.x /= numToDiv;
-        this.y /= numToDiv;
-    }
-    magnitude(){
-        var x = sqrt(abs((this.x * this.x)) + abs((this.y * this.y)));
-        return x
-    }
-    normalize(){
-        var mag = this.magnitude();
-        if(mag != 0){
-            this.divide(mag);
-        }
-    }
-    get(){
-        return(new Pvector(this.x, this.y));
-    }
-
 }
-    function subVectors(PvectorM, PvectorN){
-        return new Pvector(PvectorM.x-PvectorN.x, PvectorM.y-PvectorN.y);
-    }
 
 class Mover{
     constructor({x_,y_, vx, vy, ax, ay, mass_, topSpeed}){
@@ -50,7 +25,7 @@ class Mover{
     }
     display(){
         stroke(0);
-        fill(175);
+        fill(random(255),random(255),random(255));
         ellipse(this.location.x, this.location.y, this.mass*3, this.mass*3);
     }
     update(){
@@ -87,12 +62,12 @@ class Mover{
     }
 }
 
-var ball;
 var ballArr;
 var mu;
+var liquid;
+var liquidParam;
 
 function setup(){
-    background(255);
     var config = {
         apiKey: "AIzaSyAZodbztfznL2m-GychnIoUUM1eTtLfhgY",
         authDomain: "testproject-46fa0.firebaseapp.com",
@@ -106,12 +81,21 @@ function setup(){
     ballArr = [];
 
     mu = 0.001
+    liquidParam = {
+        x_: 0,
+        y_: innerHeight/2,
+        w_: innerWidth/2,
+        h_: innerHeight/2,
+        c_: 0.01,
+    }
+    pool = new Liquid(liquidParam);
     
     
 }
 var t = 0;
 function draw(){
-    t++;
+    background(255);
+    pool.display();
     if(mouseIsPressed){
         var moveInfo = {
         x_: mouseX,
@@ -120,11 +104,9 @@ function draw(){
         vy: 0,
         ax: 0,
         ay: 0,
-        mass_: random(1,2),
+        mass_: random(.01,2),
         topSpeed: 10,
         }
-    var ref = firebase.database().ref('ballArr');
-    ref.push(moveInfo);
     ballArr.push(new Mover(moveInfo));
     }
     for(var i = 0; i < ballArr.length; i++){
