@@ -60,6 +60,26 @@ class Mover{
         this.acceleration.add(force);
 
     }
+    isInside(fluid){
+        if(this.location.x > fluid.x && this.location.x < (fluid.x + fluid.w) && this.location.y > fluid.y && this.location.y < (fluid.y + fluid.h)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    drag(fluid){
+
+        var speed = this.velocity.magnitude();
+        var dragMagnitude = fluid.c * speed * speed;
+
+        var drag = this.velocity.get();
+        drag.multiply(-1);
+        drag.normalize();
+
+        drag.multiply(dragMagnitude);
+
+        this.applyForce(drag);
+    }
 }
 
 var ballArr;
@@ -72,11 +92,11 @@ function setup(){
     createCanvas(innerWidth, innerHeight);
     ballArr = [];
 
-    mu = 0.001
+    mu = 0.05;
     liquidParam = {
         x_: 0,
         y_: innerHeight/2,
-        w_: innerWidth/2,
+        w_: innerWidth,
         h_: innerHeight/2,
         c_: 0.01,
     }
@@ -104,26 +124,16 @@ function draw(){
     for(var i = 0; i < ballArr.length; i++){
         var wind = new Pvector(random(.05),0);
         var gravity = new Pvector(0,0.1 * (ballArr[i].mass));
-        var friction = ballArr[i].velocity.get();
-        friction.multiply(-1);
-        friction.normalize();
-        friction.multiply(mu);
 
-        var speed = ballArr[i].velocity.magnitude();
-        var dragMagnitude = mu * speed * speed;
-        drag = ballArr[i].velocity.get();
-        drag.multiply(-1);
-        drag.normalize();
-        drag.multiply(dragMagnitude);
-
-        //ballArr[i].applyForce(friction);
-        ballArr[i].applyForce(drag);
         ballArr[i].applyForce(wind);
         ballArr[i].applyForce(gravity);
 
         ballArr[i].display();
         ballArr[i].update();
         ballArr[i].checkForWalls();
+        if(ballArr[i].isInside(pool)){
+            ballArr[i].drag(pool);
+        }
         ballArr[i].limit();
     }
 }
