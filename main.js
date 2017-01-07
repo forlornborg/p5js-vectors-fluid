@@ -68,14 +68,6 @@ var liquid;
 var liquidParam;
 
 function setup(){
-    var config = {
-        apiKey: "AIzaSyAZodbztfznL2m-GychnIoUUM1eTtLfhgY",
-        authDomain: "testproject-46fa0.firebaseapp.com",
-        databaseURL: "https://testproject-46fa0.firebaseio.com",
-        storageBucket: "testproject-46fa0.appspot.com",
-        messagingSenderId: "895774418380"
-    };
-    firebase.initializeApp(config);
 
     createCanvas(innerWidth, innerHeight);
     ballArr = [];
