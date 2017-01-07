@@ -25,7 +25,7 @@ class Mover{
     }
     display(){
         stroke(0);
-        fill(random(255),random(255),random(255));
+        fill(255,0,0);
         ellipse(this.location.x, this.location.y, this.mass*3, this.mass*3);
     }
     update(){
@@ -83,7 +83,6 @@ class Mover{
 }
 
 var ballArr;
-var mu;
 var liquid;
 var liquidParam;
 
@@ -92,13 +91,12 @@ function setup(){
     createCanvas(innerWidth, innerHeight);
     ballArr = [];
 
-    mu = 0.05;
     liquidParam = {
         x_: 0,
         y_: innerHeight/2,
         w_: innerWidth,
         h_: innerHeight/2,
-        c_: 0.01,
+        c_: .1,
     }
     pool = new Liquid(liquidParam);
     
@@ -116,7 +114,7 @@ function draw(){
         vy: 0,
         ax: 0,
         ay: 0,
-        mass_: random(.01,2),
+        mass_: random(1,5),
         topSpeed: 10,
         }
     ballArr.push(new Mover(moveInfo));
